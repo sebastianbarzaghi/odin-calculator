@@ -11,10 +11,10 @@ const calculate = document.querySelector(".calculate");
 const clear = document.querySelector(".clear");
 
 numbers.forEach(number => {
-    number.addEventListener("click", addNumber(number.textContent));
+    number.addEventListener("click", () => addNumber(number.textContent));
 });
 operators.forEach(operator => {
-    operator.addEventListener("click", addOperator(operator.textContent));
+    operator.addEventListener("click", () => addOperator(operator.textContent));
 });
 calculate.addEventListener("click", calculateResult);
 clear.addEventListener("click", clearResult);
@@ -33,7 +33,12 @@ function addNumber(number) {
 function addOperator(op) {
     firstOperand = parseFloat(resultInput.value);
     operator = op;
-    resultInput.value = "0";
+
+    if (resultInput.value === "0") {
+        resultInput.value = "0";
+    } else {
+        resultInput.value += operator;
+    }
 }
 
 // Function to clear the result input
@@ -64,7 +69,8 @@ function calculateResult() {
                 break;
         }
         resultInput.value = result.toString();
-        firstOperand = null;
+
+        firstOperand = result;
         secondOperand = null;
         operator = null;
     }
