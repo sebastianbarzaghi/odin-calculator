@@ -1,79 +1,71 @@
-// variables and constants
-let firstNum = null;
-let currentOperator = null;
-let secondNum = null;
-let displayValue = null;
+// Get the result input element
+const resultInput = document.getElementById("result");
 
-const mostRecentOperation = document.querySelector(".mostRecentOperation");
-const currentOperation = document.querySelector(".currentOperation");
-const digits = document.querySelectorAll(".digit");
-const operators = document.querySelectorAll(".operation");
-const equal = document.querySelector(".calculate");
-const clear = document.querySelector(".delete");
+// Initialize variables for the calculator
+let firstOperand = null;
+let secondOperand = null;
+let operator = null;
+const numbers = document.querySelectorAll(".number");
+const operators = document.querySelectorAll(".operator");
+const calculate = document.querySelector(".calculate");
+const clear = document.querySelector(".clear");
 
-digits.forEach(digit => {
-    digit.addEventListener("click", appendDigit(digit.textContent));
+numbers.forEach(number => {
+    number.addEventListener("click", addNumber(number.textContent));
 });
-
 operators.forEach(operator => {
-    operator.addEventListener("click", setOperator(operator.textContent));
+    operator.addEventListener("click", addOperator(operator.textContent));
 });
+calculate.addEventListener("click", calculateResult);
+clear.addEventListener("click", clearResult);
 
-equal.addEventListener("click", calculate);
-clear.addEventListener("click", clearDisplay)
 
-// functions
-function add(x, y) {
-    return (x + y);
-};
-
-function subtract(x, y) {
-    return (x - y);
-};
-
-function multiply(x, y) {
-    return (x * y);
-};
-
-function divide(x, y) {
-    return (x / y);
-};
-
-function operate(operator, x, y) {
-    if (operator === "+") {
-        return add(x, y);
-    } else if (operator === "-") {
-        return subtract(x, y);
-    } else if (operator === "*") {
-        return multiply(x, y);
-    } else if (operator === "/") {
-        return divide(x, y);
-    };
-};
-
-function appendDigit(digit) {
-    if (currentOperation.textContent === "0") {
-        clearDisplay();
+// Function to add a number to the result input
+function addNumber(number) {
+    if (resultInput.value === "0") {
+        resultInput.value = number;
+    } else {
+        resultInput.value += number;
     }
-    currentOperation.textContent += digit;
-};
+}
 
-function setOperator(operator) {
-    if (currentOperation !== null) {
-        calculate();
-    };
-    firstNum = displayValue;
-    currentOperator = operator
-    mostRecentOperation.textContent = `${firstNum} ${currentOperator}`
-};
+// Function to add an operator to the calculator
+function addOperator(op) {
+    firstOperand = parseFloat(resultInput.value);
+    operator = op;
+    resultInput.value = "0";
+}
 
-function calculate() {
-    secondNum = displayValue;
-    displayValue = operate(currentOperator, parseFloat(firstNum), parseFloat(secondNum));
-    currentOperation.textContent = displayValue;
-};
+// Function to clear the result input
+function clearResult() {
+    resultInput.value = "0";
+    firstOperand = null;
+    secondOperand = null;
+    operator = null;
+}
 
-function clearDisplay() {
-    displayValue = "";
-    currentOperation.textContent = displayValue;
+// Function to perform the calculation
+function calculateResult() {
+    if (operator !== null) {
+        secondOperand = parseFloat(resultInput.value);
+        let result = null;
+        switch (operator) {
+            case "+":
+                result = firstOperand + secondOperand;
+                break;
+            case "-":
+                result = firstOperand - secondOperand;
+                break;
+            case "*":
+                result = firstOperand * secondOperand;
+                break;
+            case "/":
+                result = firstOperand / secondOperand;
+                break;
+        }
+        resultInput.value = result.toString();
+        firstOperand = null;
+        secondOperand = null;
+        operator = null;
+    }
 }
